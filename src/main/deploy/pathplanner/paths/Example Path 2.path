@@ -51,9 +51,23 @@
       "name": "marker1",
       "waypointRelativePos": 0.55,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "sequential",
+              "data": {
+                "commands": [
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "intake"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       }
     },
@@ -61,9 +75,23 @@
       "name": "marker2",
       "waypointRelativePos": 2.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "sequential",
+              "data": {
+                "commands": [
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "shoot"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       }
     }
