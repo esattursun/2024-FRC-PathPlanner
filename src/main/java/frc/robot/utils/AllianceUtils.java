@@ -15,7 +15,7 @@ public class AllianceUtils {
 
    public static Pose2d allianceToField(Pose2d alliancePose) {
     
-    switch (ally.get()) {//!Alliance artık böyle alınıyor
+    switch (ally.get()) {
         case Blue:
             return alliancePose;
         case Red:
