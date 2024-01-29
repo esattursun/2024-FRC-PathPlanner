@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.FRCPathPlanner;
@@ -41,7 +40,7 @@ public class RobotContainer {
   public static final ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
   public static final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
   public static final Joystick joystick1 = new Joystick(0);
-  public static final Joystick joystick2 = new Joystick(IntakeConstants.AngleController);
+  public static final Joystick joystick2 = new Joystick(1);
   
   public static final Drivetrain drivetrain = new Drivetrain();
 
@@ -71,11 +70,13 @@ public class RobotContainer {
   if (autoBalanceStartingPosition.getPoses().isEmpty()) {
     autoBalanceStartingPosition.setPose(AllianceUtils.allianceToField(new Pose2d(new Translation2d(0,0),new Rotation2d())));
   }
+    
     FRCPathPlanner.setSmartDashboard();
     FRCPathPlanner.CommandNameEntry();
     FRCPathPlanner.addAutoOptions();
+    FRCPathPlanner.addPathOptions();
     FRCPathPlanner.FindPath();
-    FRCPathPlanner.FollowPath();
+    
 
     configureBindings();
    
@@ -88,9 +89,9 @@ public class RobotContainer {
   
  // Pose Estimation
  
- new JoystickButton(joystick1, 6).
+ new JoystickButton(joystick1, 3).//6
     onTrue(new InstantCommand(driveCommand::resetFieldOrientation));
- new JoystickButton(joystick1, 7).
+ new JoystickButton(joystick1, 4).//7
     onTrue(new InstantCommand(() -> poseEstimation.resetPose(
      new Pose2d(
        poseEstimation.getEstimatedPose().getTranslation(),
@@ -104,7 +105,7 @@ public class RobotContainer {
    drivetrain)); 
 
 
- new JoystickButton(joystick1, 3).
+ new JoystickButton(joystick1, 2).//3
   whileTrue(autoBalanceCommand);
 
   
@@ -114,7 +115,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     Pose2d startingPose = startingPosition.getPose();
-    //1 PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path 1");
+    //1 PathPlannerPath path = PathPlannerPath.fromPathFile(Example Path 1);
     return new SequentialCommandGroup(
     new InstantCommand(() -> poseEstimation.resetPose(startingPose)),
     new InstantCommand(() -> poseEstimation.resetPose(startingPose)),

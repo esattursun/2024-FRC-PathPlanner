@@ -18,6 +18,7 @@ import com.revrobotics.SparkPIDController;//!SparkMaxPIDController kaldırıldı
 
 public class MAXSwerveModule implements SwerveModule {
     private final CANSparkMax turningSparkMax;
+    private final CANSparkMax drivingSparkMax;
 
     private final RelativeEncoder drivingEncoder;
     public final AbsoluteEncoder turningEncoder; //Fixme
@@ -35,7 +36,7 @@ public class MAXSwerveModule implements SwerveModule {
      * Encoder.
      */
     public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-        CANSparkMax drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+         drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
         turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
 
         // Factory reset, so we get the SPARKS MAX to a known state before configuring

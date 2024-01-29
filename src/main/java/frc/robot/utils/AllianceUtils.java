@@ -14,7 +14,7 @@ public class AllianceUtils {
  static Optional<Alliance> ally = DriverStation.getAlliance();
 
    public static Pose2d allianceToField(Pose2d alliancePose) {
-    
+    if (ally.isPresent()) {
     switch (ally.get()) {
         case Blue:
             return alliancePose;
@@ -28,6 +28,8 @@ public class AllianceUtils {
             );
         default:
             return null;
+    }}else{
+        return null;
     }
         
     }
@@ -55,9 +57,13 @@ public class AllianceUtils {
     public static boolean isBlue() {
         //Red seçince blue planı çalışıyo
         //Blue seçince red planı çalışıyo
-        return ally.get().equals(Alliance.Red);
-    }
+          if (ally.isPresent()) {
 
+        return ally.get().equals(Alliance.Red);
+    }else {
+        return true;
+        }
+    }
     public static double getDistanceFromAlliance(Pose2d pose) {
         return isBlue()? pose.getX() : FieldConstants.fieldLength - pose.getX();
     }

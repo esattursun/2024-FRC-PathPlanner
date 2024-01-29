@@ -16,7 +16,7 @@ import frc.robot.Constants.DriveConstants;
 public class PoseEstimation {
   
     private SwerveDrivePoseEstimator poseEstimator;
-private static SwerveDrivePoseEstimator pposeEstimator; 
+public static SwerveDrivePoseEstimator pposeEstimator; 
    
 
     private TimeInterpolatableBuffer<Pose2d> poseHistory = TimeInterpolatableBuffer.createBuffer(1.5);
@@ -61,9 +61,7 @@ private static SwerveDrivePoseEstimator pposeEstimator;
     public Pose2d getEstimatedPose() {
         return poseEstimator.getEstimatedPosition();
     }
-     public static Pose2d pgetEstimatedPose() {
-        return pposeEstimator.getEstimatedPosition();
-    }
+     
 
     public Translation2d getEstimatedVelocity() {
         double now = Timer.getFPGATimestamp();
@@ -85,9 +83,6 @@ private static SwerveDrivePoseEstimator pposeEstimator;
     public void resetPose(Pose2d pose) {
         poseEstimator.resetPosition(RobotContainer.drivetrain.getRotation(), RobotContainer.drivetrain.getModulePositions(), pose);
     }
-     public static void presetPose(Pose2d pose) {
-        pposeEstimator.resetPosition(RobotContainer.drivetrain.getRotation(), RobotContainer.drivetrain.getModulePositions(), pose);
-    }
-
+    
    
 }

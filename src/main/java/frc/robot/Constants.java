@@ -4,23 +4,15 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -32,60 +24,6 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public final class Constants {
 
-  public static class LimelightConstants{
-    public static double goalHeightInches = 30.31496; //30.31496
-  }
-
-  public final class LiftMeasurements{
-    public static final double GROUNDH = 0;
-    public static final double MIDH = 0.46; 
-    public static final double TOPH = 1.45;
-    public static final double HUMANPH = 1.37;
-    public static final double LiftAllowedError = 0.005;
-  }
-
-  public final class IntakeMeasurements{
-    public static final double IntakeClosedD = 0;
-    public static final double IntakeHalfOpenD = 3.5;
-    public static final double IntakeStraightOpenD = 7.6;
-    public static final double IntakeStraightOpenHD = 8;
-    public static final double IntakeAllowedError = 0.05;
-  }
-
-  public final class Limelight{
-    public static final double BetweenHuman = 0.85;
-  }
-
-  public final class IntakeConstants{
-
-    public static final double kEncoderTick2Meter = 1.0 / 4096.0 * 0.1 * Math.PI;
-
-    //üst sistem joystick sabitleri
-    public static final int Joystick2 = 1; //usb ports
-    
-    //pinomatik aç-kapat kontrolleri
-    public static final int SolenoidOnB = 6; //LB
-    public static final int SolenoidOffB = 5; //RB
-    
-    //asansor motor pwm
-    public static final int LiftRedline1 = 0;
-    
-    //asansör motor analog kontrolü
-    public static final int LiftControllerC = 5; //sağ yukarı asagı ters cevir
-    
-    //acili mekanizma neo500 id
-    public static final int AngleMechanismId = 9;
-
-    //üst sistem mekanizma pozisyon kontrolleri
-    public static final int GroundLevelB = 1; //A
-    public static final int FirstLevelB = 3; //X
-    public static final int HumanPB = 2; //B
-    public static final int TopLevelB = 4; //Y
-    public static final int MoveLevelB = 9; //sol analog butonu
-
-    //açılı intake kontrolleri
-    public static final int AngleController = 1; //sol yukarı aşagı 
-  }
 
 
   public static final class DriveConstants {
@@ -200,44 +138,7 @@ public final class Constants {
     public static final double aprilTagWidth = Units.inchesToMeters(6.0);
   }
   
-  public static class VisionConstants {
-   
+  
 
-    public static final Transform3d PHOTONVISION_TRANSFORM = new Transform3d(
-            new Translation3d(0.205697, -0.244475, 0.267365),
-            new Rotation3d(0, Units.degreesToRadians(15), 0)
-    );
-
-    public static final Vector<N3> PHOTONVISION_STD_DEV = VecBuilder.fill(0.7, 0.7, 0.5);
-
-    public static final Vector<N3> LIMELIGHT_STD_DEV = VecBuilder.fill(0.9, 0.9, 0.9);
-
-    public static final double AMBIGUITY_FILTER = 0.05;
-  }
-
-  public static final class AutoConstants {
-    public static final HashMap<String, Command> autoEventMap = new HashMap<>();
-    public static final double MAX_SPEED_METERS_PER_SECOND = 3;
-    public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 2;
-    public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = Math.PI * 2;
-    public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED = Math.PI * 2;
-
-    public static final double P_TRANSLATION_PATH_CONTROLLER = 1;
-    public static final double P_THETA_PATH_CONTROLLER = 1;
-
-    public static final double P_TRANSLATION_POINT_CONTROLLER = 4;
-    public static final double P_THETA_POINT_CONTROLLER = 6;
-
-    public static final double TRANSLATION_TOLERANCE = 0.02;
-    public static final Rotation2d THETA_TOLERANCE = Rotation2d.fromDegrees(1);
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
-            MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, MAX_ANGULAR_SPEED_RADIANS_PER_SECOND_SQUARED);
-
-    public static final Transform2d NODE_HIGH_TRANSFORM = new Transform2d(
-            new Translation2d(-1, 0),
-            Rotation2d.fromRadians(Math.PI)
-    );
-}
+ 
 }
