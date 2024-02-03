@@ -28,25 +28,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.poseestimation.PoseEstimation;
-import frc.robot.subsystems.drivetrain.Drivetrain;
+
 
 public class FRCPathPlanner {
     public static final SendableChooser<Command> pathChooser=new SendableChooser<>();
-    private static final Drivetrain drivetrain = new Drivetrain();
-    private static final PoseEstimation poseEstimation = new PoseEstimation();
+   
+    
 
     public final static SendableChooser<Command> autoChooser=AutoBuilder.buildAutoChooser("New Auto");
-
+    
+    public static void SetPathPlannerSettings(){
+      setSmartDashboard();
+      FindPath();
+      addPathOptions();
+      addAutoOptions();
+      CommandNameEntry();
+    }
     public static void setSmartDashboard(){
 
 
         SmartDashboard.putData("Path Mod",pathChooser);
         SmartDashboard.putData("Auto Mod", autoChooser);
-        SmartDashboard.putBoolean("İs AutoBuilder configure?", AutoBuilder.isConfigured());
+        SmartDashboard.putBoolean("is AutoBuilder configure?", AutoBuilder.isConfigured());
         SmartDashboard.putBoolean(" is pathfinding configure?", AutoBuilder.isPathfindingConfigured());
     }
 
@@ -75,7 +81,7 @@ public class FRCPathPlanner {
     // Add a button to SmartDashboard that will create and follow an on-the-fly path
     // This example will simply move the robot 2m in the +X field direction
     pathChooser.addOption("On-the-fly path", Commands.runOnce(() -> {
-      Pose2d currentPose = poseEstimation.getEstimatedPose();
+      Pose2d currentPose = RobotContainer.poseEstimation.getEstimatedPose();
       
       // The rotation component in these poses represents the direction of travel
       Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
@@ -120,8 +126,6 @@ public class FRCPathPlanner {
     autoChooser.setDefaultOption("nothing", Commands.none());
     /*autoChooser.addOption("Example Auto", new PathPlannerAuto("new Auto"));
      autoChooser.addOption("Example Auto2", new PathPlannerAuto("new Auto2"));
-     autoChooser.addOption("Example Auto3", new PathPlannerAuto("new Auto3"));
-     autoChooser.addOption("Example Auto4", new PathPlannerAuto("new Auto4"));
      */
      
 	  /*  // create autos
@@ -150,9 +154,9 @@ public class FRCPathPlanner {
      PathPlannerPath path = PathPlannerPath.fromPathFile("pathName");
       return new FollowPathHolonomic(
          path,
-         drivetrain::pgetEstimatedPose, // Robot pose supplier
-         drivetrain::pgetChassisSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-         drivetrain::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+         RobotContainer.drivetrain::pgetEstimatedPose, // Robot pose supplier
+         RobotContainer.drivetrain::pgetChassisSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        RobotContainer.drivetrain::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
          new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                  new PIDConstants(ModuleConstants.DRIVING_P, ModuleConstants.DRIVING_I, ModuleConstants.DRIVING_D), // Translation PID constants
                  new PIDConstants(ModuleConstants.TURNING_P, ModuleConstants.TURNING_I, ModuleConstants.TURNING_D), // Rotation PID constants
@@ -173,7 +177,7 @@ public class FRCPathPlanner {
              }
              return false;
          },
-         drivetrain // Reference to this subsystem to set requirements
+       RobotContainer.drivetrain // Reference to this subsystem to set requirements
         );
     }
     

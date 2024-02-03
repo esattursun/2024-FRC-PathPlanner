@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.poseestimation.PoseEstimation;
 import frc.robot.RobotContainer;
 
@@ -225,20 +226,20 @@ public class Drivetrain extends SubsystemBase {
         PoseEstimation.pposeEstimator.resetPosition(RobotContainer.drivetrain.getRotation(), RobotContainer.drivetrain.getModulePositions(), pose);
     }
 
-       public void BuilderConfigure(){
+     public void BuilderConfigure(){
          AutoBuilder.configureHolonomic(
             this::pgetEstimatedPose, // Robot pose supplier
             this::presetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::pgetChassisSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::drive,  // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    3.0, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new PIDConstants(ModuleConstants.DRIVING_P, ModuleConstants.DRIVING_I, ModuleConstants.DRIVING_D), // Translation PID constants
+                    new PIDConstants(ModuleConstants.TURNING_P, ModuleConstants.TURNING_I, ModuleConstants.TURNING_D), // Rotation PID constants
+                    DriveConstants.MAX_SPEED_METERS_PER_SECOND, // Max module speed, in m/s
+                    16.278828206, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig(  true,//Should the path be replanned at the start of path following if the robot is not already at the starting point?
                     false) //Should the path be replanned if the error grows too large or if a large error spike happens while following the path?
-            ),
+            ), 
             () -> {
                 // Boolean supplier that controls when the path will be mirrored for the red alliance
                 // This will flip the path being followed to the red side of the field.
@@ -252,8 +253,9 @@ public class Drivetrain extends SubsystemBase {
             },
             this // Reference to this subsystem to set requirements
     );
+      }
         }
         
     
     
-}
+

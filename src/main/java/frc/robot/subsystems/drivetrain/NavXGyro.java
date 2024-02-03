@@ -12,7 +12,7 @@ public class NavXGyro implements Gyro{
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
 
     public NavXGyro() {
-      // navX.calibrate(); //api de bu fonksiyonun bir işe yaramadığı yazıyor
+        //navX.calibrate();
         reset();
     }
 

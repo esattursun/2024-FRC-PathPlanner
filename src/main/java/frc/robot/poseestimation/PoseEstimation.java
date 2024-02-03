@@ -14,9 +14,11 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 public class PoseEstimation {
-  
+    
     private SwerveDrivePoseEstimator poseEstimator;
 public static SwerveDrivePoseEstimator pposeEstimator; 
+
+
    
 
     private TimeInterpolatableBuffer<Pose2d> poseHistory = TimeInterpolatableBuffer.createBuffer(1.5);
@@ -33,6 +35,9 @@ public static SwerveDrivePoseEstimator pposeEstimator;
             Constants.DriveConstants.ODOMETRY_STD_DEV,
             VecBuilder.fill(0, 0, 0) // will be overwritten for each measurement
         );
+
+  
+
         pposeEstimator = new SwerveDrivePoseEstimator(
             DriveConstants.DRIVE_KINEMATICS,
             RobotContainer.drivetrain.getRotation(),
@@ -48,11 +53,15 @@ public static SwerveDrivePoseEstimator pposeEstimator;
 
     public void periodic() {
         poseHistory.addSample(Timer.getFPGATimestamp(), poseEstimator.getEstimatedPosition());
-        pposeHistory.addSample(Timer.getFPGATimestamp(), pposeEstimator.getEstimatedPosition());
-
+        pposeHistory.addSample(Timer.getFPGATimestamp(), poseEstimator.getEstimatedPosition());
+      
+        
 
         RobotContainer.field.setRobotPose(getEstimatedPose());
     }
+
+
+
 
     public void updateOdometry(Rotation2d gyro, SwerveModulePosition[] modulePositions) {
         poseEstimator.update(gyro, modulePositions);
@@ -83,6 +92,4 @@ public static SwerveDrivePoseEstimator pposeEstimator;
     public void resetPose(Pose2d pose) {
         poseEstimator.resetPosition(RobotContainer.drivetrain.getRotation(), RobotContainer.drivetrain.getModulePositions(), pose);
     }
-    
-   
 }

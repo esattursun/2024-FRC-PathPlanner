@@ -43,7 +43,7 @@ public class RobotContainer {
   public static final Joystick joystick2 = new Joystick(1);
   
   public static final Drivetrain drivetrain = new Drivetrain();
-
+ 
   public static final PoseEstimation poseEstimation = new PoseEstimation();
 
   public static final SendableChooser<String> drivePresetsChooser = new SendableChooser<>();
@@ -62,21 +62,16 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    FRCPathPlanner.SetPathPlannerSettings();
 
 
-
-  drivetrain.setDefaultCommand(driveCommand);
+   drivetrain.setDefaultCommand(driveCommand);
 
   if (autoBalanceStartingPosition.getPoses().isEmpty()) {
     autoBalanceStartingPosition.setPose(AllianceUtils.allianceToField(new Pose2d(new Translation2d(0,0),new Rotation2d())));
   }
     
-    FRCPathPlanner.setSmartDashboard();
-    FRCPathPlanner.CommandNameEntry();
-    FRCPathPlanner.addAutoOptions();
-    FRCPathPlanner.addPathOptions();
-    FRCPathPlanner.FindPath();
-    
+  
 
     configureBindings();
    
@@ -118,8 +113,10 @@ public class RobotContainer {
     //1 PathPlannerPath path = PathPlannerPath.fromPathFile(Example Path 1);
     return new SequentialCommandGroup(
     new InstantCommand(() -> poseEstimation.resetPose(startingPose)),
-    new InstantCommand(() -> poseEstimation.resetPose(startingPose)),
-     FRCPathPlanner.autoChooser.getSelected()
+    new InstantCommand(() -> poseEstimation.resetPose(startingPose))
+     
+   //  FRCPathPlanner.autoChooser.getSelected(),
+     // FRCPathPlanner.pathChooser.getSelected()
       //3 FRCPathPlanner.pathChooser.getSelected()
       //2 FRCPathPlanner.followPathCommand("Example Path 1")
       //1 FRCPathPlanner.autoChooser.getSelected().andThen(AutoBuilder.pathfindThenFollowPath(path, new PathConstraints(3, 3, 540, 720)))

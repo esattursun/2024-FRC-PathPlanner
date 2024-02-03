@@ -12,16 +12,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;//!SparkMax Motortype  kaldırıldı bunu kullanın
-import com.revrobotics.SparkAbsoluteEncoder.Type;//!SparkMax AbsoluteType kaldırıldı bunu kullanın
-import com.revrobotics.SparkPIDController;//!SparkMaxPIDController kaldırıldı bunu kullanın
+import com.revrobotics.CANSparkLowLevel.MotorType;//!SparkMax Motortype  
+import com.revrobotics.SparkAbsoluteEncoder.Type;//!SparkMax AbsoluteType 
+import com.revrobotics.SparkPIDController;//!SparkMaxPIDController 
 
 public class MAXSwerveModule implements SwerveModule {
     private final CANSparkMax turningSparkMax;
     private final CANSparkMax drivingSparkMax;
 
     private final RelativeEncoder drivingEncoder;
-    public final AbsoluteEncoder turningEncoder; //Fixme
+    public final AbsoluteEncoder turningEncoder;
 
     private final SparkPIDController drivingPIDController;
     private final SparkPIDController turningPIDController;
