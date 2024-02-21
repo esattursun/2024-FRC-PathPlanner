@@ -1,6 +1,10 @@
+//10 PARÇA OTONOM
+
+// 10 kere 1 parça al
+// speakera git 
+// 10 kere 1 parça at 
 package frc.robot.commands.autonomous;
 
-import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,17 +14,10 @@ import java.util.stream.Stream;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -42,68 +39,18 @@ public class FRCPathPlanner {
     
     public static void SetPathPlannerSettings(){
       setSmartDashboard();
-      FindPath();
+      CommandNameEntry();
       addPathOptions();
       addAutoOptions();
-      CommandNameEntry();
+      
     }
     public static void setSmartDashboard(){
-
-
         SmartDashboard.putData("Path Mod",pathChooser);
         SmartDashboard.putData("Auto Mod", autoChooser);
         SmartDashboard.putBoolean("is AutoBuilder configure?", AutoBuilder.isConfigured());
         SmartDashboard.putBoolean(" is pathfinding configure?", AutoBuilder.isPathfindingConfigured());
     }
 
-    public static void FindPath(){
-
-    pathChooser.addOption("Pathfind to 1 Pos", AutoBuilder.pathfindToPose(
-    new Pose2d(2.70, 2.01, Rotation2d.fromDegrees(0)), 
-    new PathConstraints(
-      3.0, 3.0, 
-      Units.degreesToRadians(540), Units.degreesToRadians(720)
-    ), 
-    0, 
-    2.67
-    ));
-
-    pathChooser.addOption("Pathfind to 2 Pos", AutoBuilder.pathfindToPose(
-    new Pose2d(2.15, 3.0, Rotation2d.fromDegrees(180)), 
-    new PathConstraints(
-      3.0, 3.0, 
-      Units.degreesToRadians(540), Units.degreesToRadians(720)
-    ), 
-    0, 
-    3.35
-    ));
-
-    // Add a button to SmartDashboard that will create and follow an on-the-fly path
-    // This example will simply move the robot 2m in the +X field direction
-    pathChooser.addOption("On-the-fly path", Commands.runOnce(() -> {
-      Pose2d currentPose = RobotContainer.poseEstimation.getEstimatedPose();
-      
-      // The rotation component in these poses represents the direction of travel
-      Pose2d startPos = new Pose2d(currentPose.getTranslation(), new Rotation2d());
-      Pose2d endPos = new Pose2d(currentPose.getTranslation().plus(new Translation2d(2.0, 0.0)), new Rotation2d());
-
-      List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(startPos, endPos);
-      PathPlannerPath path = new PathPlannerPath(
-        bezierPoints, 
-        new PathConstraints(
-          3.0, 3.0, 
-          Units.degreesToRadians(360), Units.degreesToRadians(540)
-        ),  
-        new GoalEndState(0.0, currentPose.getRotation())
-      );
-
-      // Prevent this path from being flipped on the red alliance, since the given positions are already correct
-      path.preventFlipping = true;
-
-      AutoBuilder.followPath(path).schedule();
-    }));
-    } 
-  
     public static void addPathOptions(){
       //  pathChooser.addOption("Path 1", Commands.runOnce(() -> {followPathCommand(Example Path 1);} ));
       // pathChooser.addOption("Path 2", Commands.runOnce(() -> {followPathCommand(Example Path 2);} ));
@@ -120,6 +67,7 @@ public class FRCPathPlanner {
     } catch (IOException e) {
       System.out.println("********* Failed to list PathPlanner paths. *********");
     }
+
     }
 
     public static void addAutoOptions(){
@@ -141,8 +89,8 @@ public class FRCPathPlanner {
     }
 
     public static void CommandNameEntry(){
-    NamedCommands.registerCommand("marker1", Commands.print("Passed marker 1"));
-    NamedCommands.registerCommand("marker2", Commands.print("Passed marker 2"));
+    NamedCommands.registerCommand("intake", Commands.print("Passed marker 1"));
+    NamedCommands.registerCommand("shoot", Commands.print("Passed marker 2"));
     NamedCommands.registerCommand("print hello", Commands.print("hello"));
 
     //NamedCommands.registerCommand("intake", new SequentialCommandGroup(new IntakeCommand(ShooterSubsystem,1)));
@@ -151,10 +99,10 @@ public class FRCPathPlanner {
 
     
     public static Command followPathCommand(String pathName) {
-     PathPlannerPath path = PathPlannerPath.fromPathFile("pathName");
+     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
       return new FollowPathHolonomic(
          path,
-         RobotContainer.drivetrain::pgetEstimatedPose, // Robot pose supplier
+         RobotContainer.poseEstimation::getEstimatedPose, // Robot pose supplier
          RobotContainer.drivetrain::pgetChassisSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         RobotContainer.drivetrain::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
          new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -162,9 +110,7 @@ public class FRCPathPlanner {
                  new PIDConstants(ModuleConstants.TURNING_P, ModuleConstants.TURNING_I, ModuleConstants.TURNING_D), // Rotation PID constants
                  DriveConstants.MAX_SPEED_METERS_PER_SECOND, // Max module speed, in m/s
                  DriveConstants.WHEEL_BASE/2, // Drive base radius in meters. Distance from robot center to furthest module.
-                 new ReplanningConfig(
-                  true,//Should the path be replanned at the start of path following if the robot is not already at the starting point?
-                 false) //Should the path be replanned if the error grows too large or if a large error spike happens while following the path?
+                 new ReplanningConfig() //Should the path be replanned if the error grows too large or if a large error spike happens while following the path?
          ),
          () -> {
              // Boolean supplier that controls when the path will be mirrored for the red alliance

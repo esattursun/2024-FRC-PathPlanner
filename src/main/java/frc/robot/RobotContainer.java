@@ -39,8 +39,9 @@ public class RobotContainer {
   public static final ShuffleboardTab driveSettingsTab = Shuffleboard.getTab("Drive Settings");
   public static final ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
   public static final ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve");
+
   public static final Joystick joystick1 = new Joystick(0);
-  public static final Joystick joystick2 = new Joystick(1);
+  public static final Joystick driveJoystick = new Joystick(1);
   
   public static final Drivetrain drivetrain = new Drivetrain();
  
@@ -48,13 +49,15 @@ public class RobotContainer {
 
   public static final SendableChooser<String> drivePresetsChooser = new SendableChooser<>();
 
+
+
   public static Field2d field = new Field2d();
   public static Field2d nodeSelector = new Field2d();
 
   private final FieldObject2d startingPosition = field.getObject("Starting Position");
   private final FieldObject2d autoBalanceStartingPosition = field.getObject("Auto Balance Starting Position");
 
-  private DriveWithJoysticks driveCommand = new DriveWithJoysticks(drivetrain, poseEstimation, joystick1);
+  private DriveWithJoysticks driveCommand = new DriveWithJoysticks(drivetrain, poseEstimation, driveJoystick);
   private AutoBalance autoBalanceCommand = new AutoBalance(drivetrain);
  
 
@@ -71,8 +74,7 @@ public class RobotContainer {
     autoBalanceStartingPosition.setPose(AllianceUtils.allianceToField(new Pose2d(new Translation2d(0,0),new Rotation2d())));
   }
     
-  
-
+    
     configureBindings();
    
 
@@ -81,12 +83,12 @@ public class RobotContainer {
  
   private void configureBindings() {
 
-  
+   
  // Pose Estimation
  
- new JoystickButton(joystick1, 3).//6
+ new JoystickButton(driveJoystick, 3).
     onTrue(new InstantCommand(driveCommand::resetFieldOrientation));
- new JoystickButton(joystick1, 4).//7
+ new JoystickButton(driveJoystick, 4).
     onTrue(new InstantCommand(() -> poseEstimation.resetPose(
      new Pose2d(
        poseEstimation.getEstimatedPose().getTranslation(),
@@ -94,35 +96,33 @@ public class RobotContainer {
 
  // Driving 
        
- new JoystickButton(joystick1, 1).
+ new JoystickButton(driveJoystick, 1).
   whileTrue(new RunCommand(
    drivetrain::setX,
    drivetrain)); 
 
 
- new JoystickButton(joystick1, 2).//3
+ new JoystickButton(driveJoystick, 2).//3
   whileTrue(autoBalanceCommand);
 
-  
-  
+
+    
   }
-   
+ 
 
   public Command getAutonomousCommand() {
     Pose2d startingPose = startingPosition.getPose();
-    //1 PathPlannerPath path = PathPlannerPath.fromPathFile(Example Path 1);
+   //3 PathPlannerPath path = PathPlannerPath.fromPathFile("Path1");
     return new SequentialCommandGroup(
     new InstantCommand(() -> poseEstimation.resetPose(startingPose)),
-    new InstantCommand(() -> poseEstimation.resetPose(startingPose))
-     
-   //  FRCPathPlanner.autoChooser.getSelected(),
-     // FRCPathPlanner.pathChooser.getSelected()
-      //3 FRCPathPlanner.pathChooser.getSelected()
-      //2 FRCPathPlanner.followPathCommand("Example Path 1")
-      //1 FRCPathPlanner.autoChooser.getSelected().andThen(AutoBuilder.pathfindThenFollowPath(path, new PathConstraints(3, 3, 540, 720)))
- 
+    FRCPathPlanner.autoChooser.getSelected()
+   // FRCPathPlanner.followPathCommand("Example Path 1")
+     //3 AutoBuilder.followPath(path) 
     );
  }
+
+
+ 
 
 }
 

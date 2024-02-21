@@ -9,9 +9,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -141,24 +139,5 @@ public final class Constants {
   }
 
 
-  public static final class LimelightConstants {
-
-    public static final double goalHeightInches = 53.1496063;//53.1496063
   
-  }  
-
- public static class VisionConstants {
-    
-
-    public static final Transform3d PHOTONVISION_TRANSFORM = new Transform3d(
-            new Translation3d(0.205697, -0.244475, 0.267365),
-            new Rotation3d(0, Units.degreesToRadians(15), 0)
-    );
-
-    public static final Vector<N3> PHOTONVISION_STD_DEV = VecBuilder.fill(0.7, 0.7, 0.5);
-
-    public static final Vector<N3> LIMELIGHT_STD_DEV = VecBuilder.fill(0.9, 0.9, 0.9);
-
-    public static final double AMBIGUITY_FILTER = 0.05;
-  }
 }

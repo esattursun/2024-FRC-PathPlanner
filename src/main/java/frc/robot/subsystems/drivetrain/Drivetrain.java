@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.drivetrain;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.poseestimation.PoseEstimation;
 import frc.robot.RobotContainer;
 
 import java.util.ArrayList;
@@ -217,19 +215,19 @@ public class Drivetrain extends SubsystemBase {
     }
    
     public ChassisSpeeds pgetChassisSpeed() {
-       return DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(swerveModules.frontLeft.getState(),swerveModules.frontRight.getState(),swerveModules.rearLeft.getState(),swerveModules.rearRight.getState());
+       return DriveConstants.DRIVE_KINEMATICS.toChassisSpeeds(
+        swerveModules.frontLeft.getState(),
+        swerveModules.frontRight.getState(),
+        swerveModules.rearLeft.getState(),
+        swerveModules.rearRight.getState()
+        );
     }
-    public  Pose2d pgetEstimatedPose() {
-        return PoseEstimation.pposeEstimator.getEstimatedPosition();
-    }
-    public void presetPose(Pose2d pose) {
-        PoseEstimation.pposeEstimator.resetPosition(RobotContainer.drivetrain.getRotation(), RobotContainer.drivetrain.getModulePositions(), pose);
-    }
+    
 
      public void BuilderConfigure(){
          AutoBuilder.configureHolonomic(
-            this::pgetEstimatedPose, // Robot pose supplier
-            this::presetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            RobotContainer.poseEstimation::getEstimatedPose, // Robot pose supplier
+            RobotContainer.poseEstimation::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::pgetChassisSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::drive,  // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
@@ -237,8 +235,7 @@ public class Drivetrain extends SubsystemBase {
                     new PIDConstants(ModuleConstants.TURNING_P, ModuleConstants.TURNING_I, ModuleConstants.TURNING_D), // Rotation PID constants
                     DriveConstants.MAX_SPEED_METERS_PER_SECOND, // Max module speed, in m/s
                     16.278828206, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(  true,//Should the path be replanned at the start of path following if the robot is not already at the starting point?
-                    false) //Should the path be replanned if the error grows too large or if a large error spike happens while following the path?
+                    new ReplanningConfig()
             ), 
             () -> {
                 // Boolean supplier that controls when the path will be mirrored for the red alliance
